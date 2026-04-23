@@ -1,34 +1,46 @@
-const { Builder, By } = require('selenium-webdriver');
-const { expect } = require('chai');
-const assert = require('assert');
+const { chromium } = require('playwright');
+const { expect } = require('@playwright/test');
 const path = require('path');
 
 describe('File Upload Test', function() {
   this.timeout(30000);
-  let driver;
+  let browser;
+  let context;
+  let page;
 
   before(async function() {
-    driver = await new Builder().forBrowser('chrome').build();
-    await driver.get('http://the-internet.herokuapp.com/upload');
+    browser = await chromium.launch();
+    context = await browser.newContext();
+    page = await context.newPage();
+    await page.goto('http://the-internet.herokuapp.com/upload');
   });
 
   it('should upload a file and verify the upload success', async function() {
-    // Assuming there's a file named 'example.txt' in the project directory
-    const filePath = __dirname + '/example.txt';
-    const fileInput = await driver.findElement(By.id('file-upload'));
-    const uploadButton = await driver.findElement(By.id('file-submit'));
+    // File path to the test file
+    const filePath = path.join(__dirname, 'example.txt');
 
-    await fileInput.sendKeys(filePath);
+    // Locate the file input and upload button
+    const fileInput = page.locator('#file-upload');
+    const uploadButton = page.locator('#file-submit');
+
+    // Upload the file using Playwright's setInputFiles method
+    await fileInput.setInputFiles(filePath);
+    
+    // Click the upload button
     await uploadButton.click();
-    driver.sleep(15000); // Static wait for manual verification
 
-    // Wait for the file to be uploaded and the success message to appear
-    await driver.wait(() => driver.findElement(By.id('uploaded-files')).getText().then(text => text.includes('example.txt')), 10000);
-    const uploadedFileName = await driver.findElement(By.id('uploaded-files')).getText();
-    assert.strictEqual(uploadedFileName, 'example.txt', 'The uploaded file name should match the expected value.');
+    // Wait for the uploaded files element to contain the filename
+    // Playwright's auto-waiting handles the visibility and stability
+    const uploadedFiles = page.locator('#uploaded-files');
+    await expect(uploadedFiles).toContainText('example.txt');
+    
+    // Verify the exact uploaded filename
+    const uploadedFileName = await uploadedFiles.textContent();
+    expect(uploadedFileName).toBe('example.txt');
   });
 
   after(async function() {
-    await driver.quit();
+    await context.close();
+    await browser.close();
   });
 });

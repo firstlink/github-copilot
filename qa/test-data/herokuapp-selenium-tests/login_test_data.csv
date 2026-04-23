@@ -1,0 +1,13 @@
+TestCaseID,Scenario,Username,Password,ExpectedError,ExpectedURL,ExpectedMessage,TestType
+TC_LOGIN_001,Valid Credentials,tomsmith,SuperSecretPassword!,,/secure,Welcome to the Secure Area,Happy Path
+TC_LOGIN_002,Invalid Username,invaliduser,SuperSecretPassword!,Your username is invalid!,/login,,Negative
+TC_LOGIN_003,Invalid Password,tomsmith,wrongpassword,Your password is invalid!,/login,,Negative
+TC_LOGIN_004,Empty Username,,SuperSecretPassword!,,/login,,Negative
+TC_LOGIN_005,Empty Password,tomsmith,,,/login,,Negative
+TC_LOGIN_006a,SQL Injection - Single Quote OR,'' OR '1''='1,'' OR '1''='1,Your username is invalid!,/login,,Security
+TC_LOGIN_006b,SQL Injection - Comment,admin'--,password123,Your username is invalid!,/login,,Security
+TC_LOGIN_006c,XSS - Script Tag,<script>alert('XSS')</script>,password123,Your username is invalid!,/login,,Security
+TC_LOGIN_006d,XSS - Img Onerror,<img src=x onerror='alert(\"XSS\")'>,password123,Your username is invalid!,/login,,Security
+TC_LOGIN_007a,Error Message - Invalid Username,baduser,SuperSecretPassword!,Your username is invalid!,/login,,Validation
+TC_LOGIN_007b,Error Message - Invalid Password,tomsmith,badpass,Your password is invalid!,/login,,Validation
+TC_LOGIN_008,Session Management - Logout,tomsmith,SuperSecretPassword!,,/secure,Welcome to the Secure Area,Integration
