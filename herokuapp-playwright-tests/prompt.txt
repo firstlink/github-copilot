@@ -1,0 +1,29 @@
+Create a Playwright + TypeScript test automation project
+Target: https://the-internet.herokuapp.com
+
+ Requirements:
+ - Use Playwright test runner
+ - Enable HTML reporter
+ - Screenshot and video only on failure
+ - Use clear file and folder naming
+ - Keep code minimal, readable, and teachable
+ - Use Playwright-native locators like getByRole, getByLabel, getByText wherever possible
+ - Avoid XPath unless absolutely necessary
+ - Follow Page Object Model, but keep it lightweight
+ - Add comments only where they help teaching
+ - Do not create an over-engineered framework
+
+ Structure:
+ - tests/ → test files
+ - pages/ → page objects
+ - test-data/ → test inputs
+
+ Create:
+ 1. playwright.config.ts
+ 2. LoginPage.ts for /login
+    Methods: goto(), login(), getSuccessMessage(), getErrorMessage()
+ 3. login.spec.ts with:
+    - valid login test
+    - invalid login test
+ Use getByRole and getByLabel locators
+ Keep code simple, clean, and easy to explain 
